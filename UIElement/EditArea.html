@@ -18,8 +18,14 @@
         <button class="toolbar-item">4</button>
     </div>
 </div>
+
+<div class="md-foreseen">
+
+</div>
+<script src="js/markdown.min.js"></script>
 <script>
     (function init(document) {
+
         var btns = document.querySelectorAll(".toolbar-item");
         for (var i = 0; i < btns.length; i++) {
             btns[i].addEventListener("click", function () {
@@ -54,42 +60,21 @@
                 var from = sel.anchorOffset;
                 var to = sel.focusOffset;
                 cursor.lastIndex = from > to ? to : from;
+                //如果count变化
+                new Editor(document.querySelector(".content-area"), document.querySelector(".md-foreseen"));
 //                console.log("anchorOffset","baseOffset","extentOffset","focusOffset","rangeCount","type");
 //                console.log(sel.anchorOffset,sel.baseOffset,sel.extentOffset,sel.focusOffset,sel.rangeCount,sel.type);
-                console.log(cursor.lastIndex);
+                console.log(document.querySelector(".md-foreseen").innerHTML);
             }
         });
 
-        function insertHtmlAtCaret(html) {
-            var sel, range;
-            if (window.getSelection) {
-                // IE9 and non-IE
-                sel = window.getSelection();
-                if (sel.getRangeAt && sel.rangeCount) {
-                    range = sel.getRangeAt(0);
-                    range.deleteContents();
-// Range.createContextualFragment() would be useful here but is
-// non-standard and not supported in all browsers (IE9, for one)
-                    var el = document.createElement("div");
-                    el.innerHTML = html;
-                    var frag = document.createDocumentFragment(), node, lastNode;
-                    while ((node = el.firstChild)) {
-                        lastNode = frag.appendChild(node);
-                    }
-                    range.insertNode(frag);
-// Preserve the selection
-                    if (lastNode) {
-                        range = range.cloneRange();
-                        range.setStartAfter(lastNode);
-                        range.collapse(true);
-                        sel.removeAllRanges();
-                        sel.addRange(range);
-                    }
-                }
-            } else if (document.selection && document.selection.type != "Control") {
-// IE < 9
-                document.selection.createRange().pasteHTML(html);
-            }
+
+        function Editor(input, preview) {
+            this.update = function () {
+                preview.innerHTML = markdown.toHTML(input.innerText);
+            };
+            input.editor = this;
+            this.update();
         }
 
     })(document);
