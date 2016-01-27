@@ -1,0 +1,33 @@
+
+
+%common-padding{
+  padding: 6px;
+}
+%common-margin{
+  margin: 6px;
+}
+%common-space{
+  @extend %common-padding;
+  @extend %common-margin;
+}
+
+.edit-area{
+  @extend %common-space;
+  .content-area{
+    @extend %common-space;
+    overflow-y: auto;
+    background: #EEEEEE;
+    min-height: 5em;
+    max-height: 15em;
+  }
+
+  .toolbar-area{
+    @extend %common-margin;
+    background: #FFFFFF;
+    .toolbar-item{
+      box-shadow: none;
+      background: transparent;
+    }
+  }
+
+}

@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEA,oCAAe;EACb,OAAO,EAAE,GAAG;;AAEd,8DAAc;EACZ,MAAM,EAAE,GAAG;;AASX,wBAAa;EAEX,UAAU,EAAE,IAAI;EAChB,UAAU,EAAE,OAAO;EACnB,UAAU,EAAE,GAAG;EACf,UAAU,EAAE,IAAI;AAGlB,wBAAa;EAEX,UAAU,EAAE,OAAO;EACnB,sCAAa;IACX,UAAU,EAAE,IAAI;IAChB,UAAU,EAAE,WAAW",
+"sources": ["edit-area.scss"],
+"names": [],
+"file": "edit-area.css"
+}

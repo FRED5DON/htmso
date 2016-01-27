@@ -1,0 +1,18 @@
+.edit-area, .edit-area .content-area {
+  padding: 6px; }
+
+.edit-area, .edit-area .content-area, .edit-area .toolbar-area {
+  margin: 6px; }
+
+.edit-area .content-area {
+  overflow-y: auto;
+  background: #EEEEEE;
+  min-height: 5em;
+  max-height: 15em; }
+.edit-area .toolbar-area {
+  background: #FFFFFF; }
+  .edit-area .toolbar-area .toolbar-item {
+    box-shadow: none;
+    background: transparent; }
+
+/*# sourceMappingURL=edit-area.css.map */

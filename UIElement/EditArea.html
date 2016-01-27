@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="styles/edit-area.css"/>
+</head>
+<body>
+
+<input/>
+
+<div class="edit-area">
+    <div class="content-area" contenteditable="true"></div>
+    <div class="toolbar-area">
+        <button class="toolbar-item">1</button>
+        <button class="toolbar-item">2</button>
+        <button class="toolbar-item">3</button>
+        <button class="toolbar-item">4</button>
+    </div>
+</div>
+<script>
+    (function init(document) {
+        var btns = document.querySelectorAll(".toolbar-item");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].addEventListener("click", function () {
+                //输入区域获取焦点
+                document.querySelector(".content-area").focus();
+                //移动焦点到上次保存的地方
+                setCaret(document.querySelector(".content-area"), cursor.lastIndex);
+            });
+        }
+        /**
+         * 设置光标
+         * @param node
+         * @param index
+         */
+        function setCaret(node, index) {
+            var el = node;
+            var range = document.createRange();
+            var sel = document.getSelection();
+            range.setStart(el.childNodes[0], index);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+            el.focus();
+        }
+
+        var cursor = {
+            lastIndex: 0
+        };
+        document.addEventListener("selectionchange", function (e) {
+            if (e.target.activeElement.className.indexOf("content-area") >= 0) {
+                var sel = document.getSelection();
+                var from = sel.anchorOffset;
+                var to = sel.focusOffset;
+                cursor.lastIndex = from > to ? to : from;
+//                console.log("anchorOffset","baseOffset","extentOffset","focusOffset","rangeCount","type");
+//                console.log(sel.anchorOffset,sel.baseOffset,sel.extentOffset,sel.focusOffset,sel.rangeCount,sel.type);
+                console.log(cursor.lastIndex);
+            }
+        });
+
+        function insertHtmlAtCaret(html) {
+            var sel, range;
+            if (window.getSelection) {
+                // IE9 and non-IE
+                sel = window.getSelection();
+                if (sel.getRangeAt && sel.rangeCount) {
+                    range = sel.getRangeAt(0);
+                    range.deleteContents();
+// Range.createContextualFragment() would be useful here but is
+// non-standard and not supported in all browsers (IE9, for one)
+                    var el = document.createElement("div");
+                    el.innerHTML = html;
+                    var frag = document.createDocumentFragment(), node, lastNode;
+                    while ((node = el.firstChild)) {
+                        lastNode = frag.appendChild(node);
+                    }
+                    range.insertNode(frag);
+// Preserve the selection
+                    if (lastNode) {
+                        range = range.cloneRange();
+                        range.setStartAfter(lastNode);
+                        range.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                }
+            } else if (document.selection && document.selection.type != "Control") {
+// IE < 9
+                document.selection.createRange().pasteHTML(html);
+            }
+        }
+
+    })(document);
+
+
+</script>
+</body>
+</html>
