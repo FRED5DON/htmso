@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" type="text/css" href="styles/edit-area.css"/>
+	<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="styles/codemirror.css"/>
 </head>
 <body>
 
 <input/>
 
 <div class="edit-area">
-    <div class="content-area" contenteditable="true"></div>
+    <textarea class="content-area"  cols=30 rows=10 ></textarea>
     <div class="toolbar-area">
         <button class="toolbar-item">1</button>
         <button class="toolbar-item">2</button>
@@ -22,8 +24,13 @@
 <div class="md-foreseen">
 
 </div>
+<script src="js/jQuery-2.1.4.min.js"></script>
+<script src="js/codemirror.js"></script>
 <script src="js/markdown.min.js"></script>
+<script src="js/Markdown.Converter.js"></script>
 <script>
+	$(function(){
+	
     (function init(document) {
 
         var btns = document.querySelectorAll(".toolbar-item");
@@ -35,6 +42,33 @@
                 setCaret(document.querySelector(".content-area"), cursor.lastIndex);
             });
         }
+		function html_encode(str)   
+		{   
+		  var s = "";   
+		  if (str.length == 0) return "";   
+		  s = str.replace(/&/g, "&amp;");   
+		  s = s.replace(/</g, "&lt;");   
+		  s = s.replace(/>/g, "&gt;");   
+		  //s = s.replace(/ /g, "&nbsp;");   
+		  s = s.replace(/\'/g, "&#39;");   
+		  s = s.replace(/\"/g, "&quot;");   
+		  //s = s.replace(/\n/g, "<br>");   
+		  return s;   
+		}   
+
+		function html_decode(str)   
+		{   
+		  var s = "";   
+		  if (str.length == 0) return "";   
+		  s = str.replace(/&amp;/g, "&");   
+		  s = s.replace(/&lt;/g, "<");   
+		  s = s.replace(/&gt;/g, ">");   
+		  s = s.replace(/&nbsp;/g, " ");   
+		  s = s.replace(/&#39;/g, "\'");   
+		  s = s.replace(/&quot;/g, "\"");   
+		  s = s.replace(/<br>/g, "\n");   
+		  return s;   
+		}
         /**
          * 设置光标
          * @param node
@@ -55,30 +89,38 @@
             lastIndex: 0
         };
         document.addEventListener("selectionchange", function (e) {
-            if (e.target.activeElement.className.indexOf("content-area") >= 0) {
+			compile();
+			/*if (e.target.activeElement.className.indexOf("content-area") >= 0) {
                 var sel = document.getSelection();
                 var from = sel.anchorOffset;
                 var to = sel.focusOffset;
                 cursor.lastIndex = from > to ? to : from;
                 //如果count变化
-                new Editor(document.querySelector(".content-area"), document.querySelector(".md-foreseen"));
+                compile();
 //                console.log("anchorOffset","baseOffset","extentOffset","focusOffset","rangeCount","type");
 //                console.log(sel.anchorOffset,sel.baseOffset,sel.extentOffset,sel.focusOffset,sel.rangeCount,sel.type);
                 console.log(document.querySelector(".md-foreseen").innerHTML);
-            }
-        });
-
+            }*/
+        }); 
+		
+		function compile(){
+			new Editor($(".content-area").val(), $(".md-foreseen"));
+		}
 
         function Editor(input, preview) {
             this.update = function () {
-                preview.innerHTML = markdown.toHTML(input.innerText);
+			var converter = new Markdown.Converter();
+			var html = converter.makeHtml(input);
+            preview.html(html);
             };
             input.editor = this;
             this.update();
         }
+		
+		
 
     })(document);
-
+});
 
 </script>
 </body>
